@@ -41,6 +41,21 @@ class Transducer(object):
         self.NUM_POS   = self.vocab.pos_train
         self.NUM_ACTS  = self.vocab.act_train
         # an enumeration of all encoded insertions
+        # print "\n\nself.vocab = " + str(self.vocab) # ########### My addition ###########
+        # print "type(self.vocab) = " + str(type(self.vocab)) + " \n" # ########### My addition ###########
+        #        
+        # print "self.vocab.char = " + str(self.vocab.char) # ########### My addition ###########
+        # print "self.vocab.char_train = " + str(self.vocab.char_train) + " \n" # ########### My addition ###########
+        # print "self.vocab.feat = " + str(self.vocab.feat) # ########### My addition ###########
+        # print "self.vocab.feat_train = " + str(self.vocab.feat_train) + " \n" # ########### My addition ###########
+        # print "self.vocab.pos = " + str(self.vocab.pos) # ########### My addition ###########
+        # print "self.vocab.pos_train = " + str(self.vocab.pos_train) + " \n" # ########### My addition ###########
+        # print "self.vocab.act = " + str(self.vocab.act) # ########### My addition ###########
+        # print "self.vocab.act_train = " + str(self.vocab.act_train) + " \n" # ########### My addition ###########
+        #        
+        # print "self.vocab.w2i_acts = " + str(self.vocab.w2i_acts) # ########### My addition ###########
+        # print "self.vocab.number_specials = " + str(self.vocab.number_specials) + " \n\n" # ########### My addition ###########
+
         self.INSERTS   = range(self.vocab.number_specials, self.NUM_ACTS)
         
         # report stats
@@ -288,6 +303,7 @@ class Transducer(object):
         count = 0
 
         if show_oracle_actions:
+            # print "\n\n#1 Something is printed here:"
             print
             print u''.join([self.vocab.act.i2w[a] for a in oracle_actions])
             print u''.join([self.vocab.char.i2w[a] for a in lemma])
@@ -295,6 +311,8 @@ class Transducer(object):
         while len(action_history) <= MAX_ACTION_SEQ_LEN:
             
             if show_oracle_actions:
+                # print "\n#2 Something is printed here:"
+
                 print 'Action: ', count, self.vocab.act.i2w[action_history[-1]]
                 print 'Encoder length, char: ', lemma, len(encoder), self.vocab.char.i2w[encoder.s[-1][-1]]
                 print 'word: ', u''.join(word)
@@ -323,7 +341,9 @@ class Transducer(object):
             else:
                 h = classifier_input
             logits = W_act * h + b_act
+            # print "\n\nThe valid actions are: " + str(valid_actions) + " \n\n" # ########### My addition ###########
             log_probs = dy.log_softmax(logits, valid_actions)
+            # print "MADE IT UNTIL HERE, oracle_actions = {}\n".format(oracle_actions)
             # get action (argmax, sampling, or use oracle actions)
             if oracle_actions is None:
                 if sampling:
@@ -339,8 +359,10 @@ class Transducer(object):
             else:
                 action = oracle_actions.pop()
 
+            # print 'al hapanim 2'
             losses.append(dy.pick(log_probs, action))
             action_history.append(action)
+            # print 'al hapanim 3'
 
             #print 'action, log_probs: ', action, self.vocab.act.i2w[action], losses[-1].scalar_value(), log_probs.npvalue()
             
@@ -355,6 +377,7 @@ class Transducer(object):
                 encoder.pop()
             elif action == END_WORD:
                 # 1. Finish transduction
+                # print 'action '
                 break
             else:
                 # one of the INSERT actions
@@ -362,7 +385,8 @@ class Transducer(object):
                 # 1. Append inserted character to the output word
                 char_ = self.vocab.act.i2w[action]
                 word.append(char_)
-                
+            # print 'al hapanim 4'
+        # print 'al hapanim 5'        
         word = u''.join(word)
         return losses, word, action_history
 
