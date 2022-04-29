@@ -37,8 +37,8 @@ def process_paths(arguments):
     if arguments['--hall-path']:
         hall_path = check_path(arguments['--hall-path'], 'hall_path')
         train_path = [train_path, hall_path]
-    # dev_path   = check_path(arguments['DEV-PATH'], 'DEV_PATH')
-    dev_path = None
+    dev_path = check_path(arguments['DEV-PATH'], 'DEV_PATH')
+    # dev_path = None
     if arguments['--test-path']:
         test_path = check_path(arguments['--test-path'], 'test_path')
     else:
