@@ -741,5 +741,7 @@ def dev_external_eval(batches, transducer, vocab, paths,
 
 def test_external_eval(batches, transducer, vocab, paths, beam_widths, sigm2017format):
     
-    withheld_data_eval("test", batches, transducer, vocab, beam_widths,
+    accuracy = withheld_data_eval("test", batches, transducer, vocab, beam_widths,
                        paths['test_output'], paths['test_path'], sigm2017format)
+    with open(paths['stats_file_path'], 'a+') as f:
+        print >> f, "TEST ACCURACY (internal evaluation) = {}".format(accuracy)
