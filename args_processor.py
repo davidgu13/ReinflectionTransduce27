@@ -15,6 +15,7 @@ import hard
 def process_paths(arguments):
     
     def check_path(path, arg_name, is_data_path=True, create=True):
+        path = path.replace("\r", "")
         if not os.path.exists(path):
             prefix = DATA_PATH if is_data_path else RESULTS_PATH
             orig_path = path
