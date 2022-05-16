@@ -21,6 +21,18 @@ def remove_pipe(string):
         pass
     return string
 
+
+
+def action2string(actions, vocab):
+    return u''.join(vocab.act.i2w[a] for a in actions)
+
+def feats2string(pos, feats, vocab):
+    if pos:
+        pos_str = vocab.pos.i2w[pos] + u';'
+    else:
+        pos_str = u''
+    return  pos_str + u';'.join(vocab.feat.i2w[f] for f in feats)
+
 #############################################################
 # DATASETS
 #############################################################
@@ -202,15 +214,6 @@ class AlignedDataSample(BaseDataSample):
         return u'Input: {},Features: {}, Output: {}, Features: {}, Actions: {}'.format(
             self.lemma_str, self.in_feat_repr, self.word_str, self.out_feat_repr, self.act_repr)
 
-def action2string(actions, vocab):
-    return u''.join(vocab.act.i2w[a] for a in actions)
-
-def feats2string(pos, feats, vocab):
-    if pos:
-        pos_str = vocab.pos.i2w[pos] + u';'
-    else:
-        pos_str = u''
-    return  pos_str + u';'.join(vocab.feat.i2w[f] for f in feats)
 
 class BaseDataSet(object):
     # class to hold an encoded dataset
@@ -286,6 +289,7 @@ class BaseDataSet(object):
 
         return cls(filename=filename, samples=datasamples, vocab=vocab,
                    training_data=training_data, tag_wraps=tag_wraps, verbose=verbose, **kwargs)
+
 
 class PCFPDataSet(BaseDataSet):
     @classmethod
