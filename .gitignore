@@ -5,6 +5,7 @@
 *.xlsx
 *.sh
 *.txt
+*.rar
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -531,16 +531,13 @@ class EditDataSet(AlignedDataSet):
         sample.set_actions(actions, lemma, word)
 
     @classmethod
-    def from_file(cls, filename, vocab=None, pos_emb=True, avm_feat_format=False,
-                  param_tying=False, **kwargs):
+    def from_file(cls, filename, vocab=None, pos_emb=True, avm_feat_format=False, param_tying=False, **kwargs):
         if vocab:
             assert isinstance(vocab, EditVocab)
         else:
-            vocab = EditVocab(pos_emb=pos_emb, avm_feat_format=avm_feat_format,
-                              param_tying=param_tying)
+            vocab = EditVocab(pos_emb=pos_emb, avm_feat_format=avm_feat_format, param_tying=param_tying)
         print vocab
-        return super(EditDataSet, cls).from_file(filename, vocab, pos_emb=pos_emb,
-                                                 avm_feat_format=avm_feat_format, **kwargs)
+        return super(EditDataSet, cls).from_file(filename, vocab, pos_emb=pos_emb, avm_feat_format=avm_feat_format, **kwargs)
 
 
 if __name__ == "__main__":
