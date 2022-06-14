@@ -3,11 +3,11 @@ from datasets import EditVocab
 import os
 
 def dataset_example():
-    import pdb
-    pdb.set_trace()
+    # import pdb
+    # pdb.set_trace()
     # dset = EditDataSet(False, False, False)
     print "\n\nPrinting info about the dataset"
-    train_data = EditDataSet.from_file(os.path.join('.data', 'Reinflection', 'kat.V', 'kat.V.form.dev.txt'), EditVocab())
+    train_data = EditDataSet.from_file(os.path.join('.data', 'Reinflection', 'kat.V', 'kat.V.form.dev.txt'), EditVocab(), **{'sigm2017format': False})
     print "train_data.vocab = {}".format(train_data.vocab)
     print "train_data.training_data = {}".format(train_data.training_data)
     print "train_data.length = {}".format(train_data.length)
