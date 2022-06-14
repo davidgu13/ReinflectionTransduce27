@@ -211,8 +211,8 @@ class AlignedDataSample(BaseDataSample):
         self.aligned_word = aligned_word    # unicode string
 
     def __repr__(self):
-        return 'Input: {},Features: {}, Output: {}, Features: {}, Actions: {}'.format(
-            self.lemma_str, self.in_feat_repr, self.word_str, self.out_feat_repr, self.act_repr)
+        return u'Input: {},Features: {}, Output: {}, Features: {}, Actions: {}'.format(
+            self.lemma_str, self.in_feat_repr, self.word_str, self.out_feat_repr, self.act_repr).encode('utf8')
 
 
 class BaseDataSet(object):
@@ -265,9 +265,8 @@ class BaseDataSet(object):
         with codecs.open(filename, encoding=encoding) as f:
             for row in f:
                 split_row = row.strip().split(delimiter)
-                sample = DataSample.from_row(vocab, training_data, tag_wraps, verbose,
-                                         split_row, sigm2017format, no_feat_format,
-                                         pos_emb, avm_feat_format)
+                sample = DataSample.from_row(vocab, training_data, tag_wraps, verbose, split_row,
+                                             sigm2017format, no_feat_format, pos_emb, avm_feat_format)
                 datasamples.append(sample)
 
         if hallname:
