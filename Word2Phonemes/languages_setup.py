@@ -28,7 +28,7 @@ def editDistance(str1, str2):
             table[i][j] = min(table[i - 1][j] + 1, table[i][j - 1] + 1, table[i - 1][j - 1] + dg)
     return int(table[len(str2)][len(str1)])
 
-def tuple_of_phon_tuples2phon_sequence(tupleOfTuples) -> [str]:
+def tuple_of_phon_tuples2phon_sequence(tupleOfTuples):
     return list(chain(*joinit(tupleOfTuples, ('$',))))
 
 
@@ -38,8 +38,8 @@ class LanguageSetup:
     Note: the class is implemented to fit to Georgian, Russian and several Indo-European languages. For languages with more complex phonology,
     this class might need to be extended/be inherited from.
     """
-    def __init__(self, lang_name: str, graphemes2phonemes:dict, max_phoneme_size: int,
-                 phon_use_attention: bool, manual_word2phonemes=None, manual_phonemes2word=None):
+    def __init__(self, lang_name, graphemes2phonemes, max_phoneme_size,
+                 phon_use_attention, manual_word2phonemes=None, manual_phonemes2word=None):
         self._name = lang_name
         self._graphemes2phonemes = graphemes2phonemes
         self._graphemes2phonemes.update(dict(zip(punctuations, punctuations)))
@@ -58,14 +58,14 @@ class LanguageSetup:
     def get_lang_alphabet(self): return self._alphabet
     def get_lang_phonemes(self): return self._phonemes
 
-    def word2phonemes(self, word:str, mode:str) -> [[int]]:
+    def word2phonemes(self, word, mode):
         """
         Convert a word (sequence of graphemes) to a list of phoneme tuples.
         :param word: word
         :param mode: can be either 'features' or 'phonemes' (see more above).
         :return: ((,,), (,,), (,,), ...) or list(*IPA symbols*)
         """
-        assert mode in {'features', 'phonemes'}, f"Mode {mode} is invalid"
+        assert mode in {'features', 'phonemes'}, u"Mode {} is invalid".format(mode)
 
         word = word.casefold() # lower-casing
         graphemes = list(word) # beware of Niqqud-like symbols
@@ -88,14 +88,14 @@ class LanguageSetup:
             features = tuple_of_phon_tuples2phon_sequence(features)
             return features
 
-    def phonemes2word(self, phonemes: [[str]], mode:str) -> str:
+    def phonemes2word(self, phonemes, mode):
         """
         Convert a list of phoneme tuples to a word (sequence of graphemes)
         :param phonemes: [(,,), (,,), (,,), ...] or (*IPA symbols*)
         :param mode: can be either 'features' or 'phonemes' (see more above).
         :return: word
         """
-        assert mode in {'features', 'phonemes'}, f"Mode {mode} is invalid"
+        assert mode in {'features', 'phonemes'}, u"Mode {} is invalid".format(mode)
 
         if mode=='phonemes':
             if self.manual_phonemes2word:
@@ -117,18 +117,18 @@ class LanguageSetup:
 
 # For debugging purposes:
 def two_way_conversion(w, lang_phonology):
-    print(f"PHON_USE_ATTENTION, lang = false, '{lang}'")
-    print(f"w = {w}")
+    print(u"PHON_USE_ATTENTION, lang = false, '{}'".format(lang))
+    print(u"w = {}".format(w))
     ps = lang_phonology.word2phonemes(w, mode='phonemes')
     feats = lang_phonology.word2phonemes(w, mode='features')
-    print(f"phonemes = {ps}\nfeatures = {feats}")
+    print(u"phonemes = {}\nfeatures = {}".format(ps, feats))
 
     p2word = lang_phonology.phonemes2word(ps, mode='phonemes')
-    print(f"p2word: {p2word}\nED(w, p2word) = {editDistance(w, p2word)}")
+    print(u"p2word: {}\nED(w, p2word) = {}".format(p2word, editDistance(w, p2word)))
 
     feats = [f.split(',') for f in ','.join(feats).split(',$,')]
     f2word = lang_phonology.phonemes2word(feats, mode='features')
-    print(f"f2word: {f2word}\nED(w, f2word) = {editDistance(w, f2word)}")
+    print(u"f2word: {}\nED(w, f2word) = {}".format(f2word, editDistance(w, f2word)))
 
 if __name__ == '__main__':
     # made-up words to test the correctness of the g2p/p2g conversions algorithms (for debugging purposes):
