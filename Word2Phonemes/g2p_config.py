@@ -86,7 +86,10 @@ bul_p2g_dict = chain_dictionaries(dict(zip(bul_phonemes, bul_alphabet)), punctua
 def bul_word2phonemes(w):
     phonemes = []
     for g in w:
-        target_phoneme = [*bul_g2p_dict[g]] if g in {u'щ', u'ю', u'я'} else bul_g2p_dict[g]
+        if g in {u'щ', u'ю', u'я'}:
+            target_phoneme = list(bul_g2p_dict[g])
+        else:
+            target_phoneme = bul_g2p_dict[g]
         phonemes.extend(target_phoneme if type(target_phoneme)==list else [target_phoneme])
     return phonemes
 def bul_phonemes2word(phonemes):
