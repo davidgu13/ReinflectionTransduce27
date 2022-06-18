@@ -21,8 +21,6 @@ def remove_pipe(string):
         pass
     return string
 
-
-
 def action2string(actions, vocab):
     return u''.join(vocab.act.i2w[a] for a in actions)
 
@@ -72,6 +70,7 @@ class BaseDataSample(object):
             in_feats_str, input_str, out_feats_str, output_str = row
             feats_delimiter = u';'
             # feats_delimiter = u','
+
         # encode features as integers
         # POS feature treated separately
         assert isinstance(input_str, unicode), input_str
@@ -82,6 +81,7 @@ class BaseDataSample(object):
         assert isinstance(out_feats_str, unicode), out_feats_str
         # `avm_feat_format=True` implies that `pos_emb=False`
         if avm_feat_format: assert not pos_emb
+
         # encode input characters
         input = [vocab.char[c] for c in input_str] #.split()] # todo oracle
         # encode word
