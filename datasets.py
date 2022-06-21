@@ -212,7 +212,7 @@ class AlignedDataSample(BaseDataSample):
 
     def __repr__(self):
         return u'Input: {},Features: {}, Output: {}, Features: {}, Actions: {}'.format(
-            self.lemma_str, self.in_feat_repr, self.word_str, self.out_feat_repr, self.act_repr).encode('utf8')
+            self.lemma_str, self.in_feat_repr, self.word_str, self.out_feat_repr, self.act_repr)
 
 
 class BaseDataSet(object):

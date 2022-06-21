@@ -23,16 +23,16 @@ class Vocab(object):
         w2i = {}
         idx = 0
         for word in set(words):
-            if encoding:
-                word = word.decode(encoding)
+            # if encoding:
+            #     word = word.decode(encoding)
             w2i[word] = idx
             idx += 1
         return Vocab(w2i, encoding=encoding)
     
     def __getitem__(self, word):
         # encodes the word if it is not in vocab
-        if self.encoding:
-            word = word.decode(self.encoding)
+        # if self.encoding:
+        #     word = word.decode(self.encoding)
         if word in self.w2i:
             idx = self.w2i[word]
         else:
@@ -43,8 +43,8 @@ class Vocab(object):
         return idx
     
     def __contains__(self, word):
-        if self.encoding:
-            word = word.decode(self.encoding)
+        # if self.encoding:
+        #     word = word.decode(self.encoding)
         return word in self.w2i
     
     def keys(self): return self.w2i.keys()
@@ -56,7 +56,19 @@ class Vocab(object):
     def __len__(self): return self.size()
     
     def size(self): return len(self.w2i.keys())
-    
+
+    def printer(self):
+        print("\nPrinting object info:")
+        print(u"self.encoding = {}".format(self.encoding))
+
+        print(u"self.w2i = {}".format(self.w2i))
+        print(u"self.i2w = {}".format(self.i2w))
+
+        print(u"self.freqs = {}".format(self.freqs))
+
+        print(u"self.keys() = {}".format(self.keys()))
+        print(u"self.freq() = {}".format(self.freq()))
+        print(u"self.size() = {}\n".format(self.size()))
 
 class VocabBox(object):
     def __init__(self, acts, pos_emb, avm_feat_format, param_tying, encoding):
@@ -120,7 +132,7 @@ class MinimalVocab(VocabBox):
         super(MinimalVocab, self).__init__(acts, pos_emb, avm_feat_format, param_tying, encoding)
         
 class EditVocab(VocabBox):
-    def __init__(self, pos_emb=True, avm_feat_format=False, param_tying=False, encoding=None):
+    def __init__(self, pos_emb=True, avm_feat_format=False, param_tying=False, encoding='utf8'):
         acts = {UNK_CHAR : UNK,
                 BEGIN_WORD_CHAR : BEGIN_WORD,
                 END_WORD_CHAR : END_WORD,

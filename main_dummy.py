@@ -2,13 +2,13 @@
 def Vocab_example():
     from vocabulary import Vocab
     # obj = Vocab()
-    s = 'fndsoanofinviabfsainvdvnsiubviorwgru ghruebiudsabdiufbv uiahfudaid'
-    obj = Vocab.from_list(list(s), encoding=None)
+    s = u'ფიდოსაფჯი იოა ფიდჯ საიოჯ ფჯასიოჯფ იდოსაჰგუბწეიონ რეწოი ოოიოიდ'
+    obj = Vocab.from_list(list(s))
     obj.printer()
 
-    print(obj['f'])
-    print(obj['f'])
-    print(obj['f'])
+    print(obj[u'f'])
+    print(obj[u'f'])
+    print(obj[u'f'])
 
     obj.printer()
 
@@ -60,4 +60,6 @@ def phonology_example():
 
 
 if __name__ == '__main__':
-    dataset_example()
+    # Vocab_example()
+    # dataset_example()
+    phonology_example()
