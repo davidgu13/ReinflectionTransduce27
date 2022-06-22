@@ -88,7 +88,7 @@ class LanguageSetup:
             features = tuple_of_phon_tuples2phon_sequence(features)
             return features
 
-    def phonemes2word(self, phonemes, mode):
+    def _phonemes2word(self, phonemes, mode):
         """
         Convert a list of phoneme tuples to a word (sequence of graphemes)
         :param phonemes: [(,,), (,,), (,,), ...] or (*IPA symbols*)
@@ -114,6 +114,26 @@ class LanguageSetup:
                     phoneme_tokens.append(p)
             graphemes = self.phonemes2word(phoneme_tokens, 'phonemes')
         return ''.join(graphemes)
+
+    def phonemes2word(self, sequence, mode):
+        """
+        Wrapper for _phonemes2word.
+        sequence is list, of either features (['1', '2', '3', '$', '4', '5', 'NA', '$', ...]),
+        phonemes (['p', 't', 'o:', ...]), or combined (['1', '2', '3', 'p', '$', '4', '5', 'NA', 'o:', '$', ...])
+        """
+        assert mode in {'features', 'phonemes'}, u"Mode {} is invalid".format(mode)
+
+        if mode == 'features':
+            phon_feats = ','.join(sequence).split(',$,')
+            if self.manual_phonemes2word and self.phon_use_attention:
+                new_sequence = self._phonemes2word([e.split(',')[-1] for e in phon_feats], mode='phonemes')
+            else:
+                new_sequence = self._phonemes2word([p.split(',') for p in phon_feats], mode='features')
+        else: # mode=='phonemes'
+            new_sequence = self._phonemes2word(sequence, mode='phonemes')
+
+        return new_sequence
+
 
 # For debugging purposes:
 def two_way_conversion(w, lang_phonology):
