@@ -60,7 +60,7 @@ class BaseDataSample(object):
 
     @classmethod
     def from_row(cls, vocab, training_data, tag_wraps, verbose, row, sigm2017format=True,
-                 no_feat_format=False, pos_emb=True, avm_feat_format=False):
+                 no_feat_format=False, pos_emb=True, avm_feat_format=False, phonology_converter=None):
         if sigm2017format:
             input_str, in_feats_str, output_str, out_feats_str = row
             feats_delimiter = u';'
@@ -82,10 +82,13 @@ class BaseDataSample(object):
         # `avm_feat_format=True` implies that `pos_emb=False`
         if avm_feat_format: assert not pos_emb
 
+        input_features = tuple(phonology_converter.word2phonemes(input_str, 'features'))
+        output_features = tuple(phonology_converter.word2phonemes(output_str, 'features'))
+
         # encode input characters
-        input = [vocab.char[c] for c in input_str] #.split()] # todo oracle
+        input = [vocab.char[c] for c in input_features] #.split()] # todo oracle
         # encode word
-        word = vocab.word[output_str] #.replace(' ','')] # todo oracle
+        word = vocab.word[output_features] #.replace(' ','')] # todo oracle
         in_feats = in_feats_str.split(feats_delimiter) if not no_feat_format else ['']
         out_feats = out_feats_str.split(feats_delimiter) if not no_feat_format else ['']
         if pos_emb:
@@ -234,6 +237,15 @@ class BaseDataSet(object):
                   pos_emb=True, avm_feat_format=False, tag_wraps='both', verbose=True, **kwargs):
         # filename (str):   tab-separated file containing morphology reinflection data:
         #                   lemma word feat1;feat2;feat3...
+
+        language = kwargs['language']
+        # Importing the static objects
+        from Word2Phonemes.g2p_config import p2f_dict, langs_properties
+        from Word2Phonemes.languages_setup import LanguageSetup
+        # Calculating and instantiating the dynamic objects
+        max_feat_size = max([len(p2f_dict[p]) for p in langs_properties[language][0].values() if p in p2f_dict])  # composite phonemes aren't counted in that list
+        phonology_converter = LanguageSetup(language, langs_properties[language][0], max_feat_size, False, langs_properties[language][1], langs_properties[language][2])
+
         if isinstance(filename, list):
             filename, hallname = filename
             print 'adding hallucinated data from', hallname
@@ -266,7 +278,8 @@ class BaseDataSet(object):
             for row in f:
                 split_row = row.strip().split(delimiter)
                 sample = DataSample.from_row(vocab, training_data, tag_wraps, verbose, split_row,
-                                             sigm2017format, no_feat_format, pos_emb, avm_feat_format)
+                                             sigm2017format, no_feat_format, pos_emb, avm_feat_format,
+                                             phonology_converter=phonology_converter)
                 datasamples.append(sample)
 
         if hallname:
