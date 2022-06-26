@@ -67,7 +67,7 @@ class LanguageSetup:
         """
         assert mode in {'features', 'phonemes'}, u"Mode {} is invalid".format(mode)
 
-        word = word.casefold() # lower-casing
+        word = word.lower() # lower-casing
         graphemes = list(word) # beware of Niqqud-like symbols
 
         if self._manual_word2phonemes:
@@ -150,10 +150,34 @@ def two_way_conversion(w, lang_phonology):
     f2word = lang_phonology.phonemes2word(feats, mode='features')
     print(u"f2word: {}\nED(w, f2word) = {}".format(f2word, editDistance(w, f2word)))
 
+def analyze(s):
+    print("1. Clean: ", s)
+
+    su = u"{}".format(s)
+    print("2. u-prefixed: ", su)
+
+    s_lowered = s.lower()
+    print("3. Clean, lowered: ", s_lowered)
+
+    su_lowered = u"{}".format(s.lower())
+    print("4. u-prefixed, lowered: ", su_lowered)
+
+    # if s == su: print '1 == 2'
+    # if s == s_lowered: print '1 == 3'
+    # if s == su_lowered: print '1 == 4'
+    # if su == s_lowered: print '2 == 3'
+    # if su == su_lowered: print '2 == 4'
+    # if s_lowered == su_lowered: print '3 == 4'
+
+    if s == su and s == s_lowered and s == su_lowered and su == s_lowered and su == su_lowered and s_lowered == su_lowered:
+        print("Perfect!\n")
+    else:
+        print("Not Perfect!\n")
+
 if __name__ == '__main__':
     # made-up words to test the correctness of the g2p/p2g conversions algorithms (for debugging purposes):
-    example_words = {'kat': 'არ მჭირდ-ებოდყეტ', 'swc': "magnchdhe-ong jwng'a", 'sqi': 'rdhëije rrçlldgj-ijdhegnjzh', 'lav': 'abscā t-raķkdzhēļšanģa',
-                     'bul': 'най-ясюногщжто', 'hun': 'hűdályiokró- l eéfdzgycsklynndzso nyoyaxy', 'tur': 'yığmalılksar mveğateğwypûrtâşsmış', 'fin': 'ixlmksnngvnk- èeé aatööböyynyissä'}
+    example_words = {'kat': u'არ მჭირდ-ებოდყეტ', 'swc': u"magnchdhe-ong jwng'a", 'sqi': u'rdhëije rrçlldgj-ijdhegnjzh', 'lav': u'abscā t-raķkdzhēļšanģa',
+                     'bul': u'най-ясюногщжто', 'hun': u'hűdályiokró- l eéfdzgycsklynndzso nyoyaxy', 'tur': u'yığmalılksar mveğateğwypûrtâşsmış', 'fin': u'ixlmksnngvnk- èeé aatööböyynyissä'}
     language = 'kat'
     max_features_size = max([len(p2f_dict[p]) for p in langs_properties[language][0].values() if p in p2f_dict])
     phon_use_attention = False

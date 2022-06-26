@@ -11,7 +11,7 @@ height = ['open', 'open-mid', 'mid', 'close-mid', 'close'] # 22-26
 backness = ['front', 'back', 'central'] # 27-29
 roundness = ['rounded', 'unrounded'] # 30-31
 length = ['long'] # only for vowels; no occurence means short vowel # 32
-punctuations = [' ', '-', "'", "̇", '.', '*', '?'] # 33-38, '*' is for predictions of non-existent feature bundles (see languages_setup.py)
+punctuations = [' ', '-', "'", "̇", '.', '*', '?'] # 33-39, '*' is for predictions of non-existent feature bundles (see languages_setup.py)
 
 phon_features = place + manner + voice + height + backness + roundness + length + punctuations
 idx2feature = dict(enumerate(phon_features))
@@ -115,8 +115,8 @@ def hun_clean_sample(x):
     # (search in the data for "jósolj|or|") or between 2 forms (search for "jóslok |or| jósolok").
     # There are also pipes ("|"), alone or preceded by a space " |".
     # The input is in format of ','.join(input), so the cleaning patterns follow this method.
-    chars_to_remove = [','+','.join(" |or| "), ','+','.join("|or|"), ", ,|", ",|"]
-    for p in chars_to_remove: x = x.replace(p, "")
+    chars_to_remove = [u','+u','.join(u" |or| "), u','+u','.join(u"|or|"), u", ,|", u",|"]
+    for p in chars_to_remove: x = x.replace(p, u"")
     return x
 hun_components = [hun_g2p_dict, hun_word2phonemes, hun_phonemes2word, hun_clean_sample]
 # endregion Hungarian - hun
@@ -128,7 +128,7 @@ tur_phonemes = [u'a', u'b', u'd͡ʒ', u't͡ʃ', u'd', u'ɛ', u'f', u'ɡ', u'j', 
 tur_g2p_dict = chain_dictionaries(dict(zip(tur_alphabet, tur_phonemes)), punctuations_g2p_dict)
 tur_p2g_dict = chain_dictionaries(dict(zip(tur_phonemes, tur_alphabet)), punctuations_g2p_dict)
 def lengthen_last_item(phonemes_list):
-    phonemes_list[-1]+='ː'
+    phonemes_list[-1]+=u'ː'
     return phonemes_list
 
 turkish_vowels = {u'a', u'e', u'i', u'o', u'u', u'ı', u'ö', u'ü', u'â', u'î', u'û'}
@@ -171,7 +171,7 @@ def tur_phonemes2word(phonemes):
         p = phonemes[i]
         if p in special_mappings:
             g = special_mappings[p]
-        elif 'ː' in p: # a long vowel
+        elif u'ː' in p: # a long vowel
             g = [tur_p2g_dict[p[0]], u'ğ']
             if i < len(phonemes)-1 and phonemes[i+1] != u' ':
                 g += tur_p2g_dict[p[0]] # add the other grapheme only if it's not the last phoneme.
